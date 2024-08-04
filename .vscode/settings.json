@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "stdbool.h": "c",
+        "graphics.h": "c",
+        "limine.h": "c",
+        "limine": "c",
+        "stdint.h": "c",
+        "stddef.h": "c"
+    }
+}

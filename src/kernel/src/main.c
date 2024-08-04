@@ -1,11 +1,15 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+//#include <limine.h>
 #include <limine.h>
 
 // Flanterm
 #include <flanterm/flanterm.h>
 #include <flanterm/backends/fb.h>
+
+// Graphics
+#include <graphics.h>
 
 // Set the base revision to 2, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -99,6 +103,9 @@ static void hcf(void) {
     }
 }
 
+int ft_ctx_init = 0; // Defines if it's initialised or not, no point in attempting to use it without it.
+struct flanterm_context *ft_ctx_public;
+
 // The following will be our kernel's entry point.
 // If renaming _start() to something else, make sure to change the
 // linker script accordingly.
@@ -138,11 +145,175 @@ void _start(void) {
         0
     );
 
+    ft_ctx_public = ft_ctx;
+    ft_ctx_init = 1;
+
     //const char msg[] = "Hello, world!\nThis is a test of the flanterm terminal emulator.\n";
     const char msg[] = "Welcome to BananaOS, initialising...\n";
 
     flanterm_write(ft_ctx, msg, sizeof(msg));
 
+    drawFilledRectangle(ft)
+
+    //panic("Idk", "SOMETHING_WENT_WRONG");
+
+    /*unsigned int currentColour = 0x000000;
+
+    int x = 0;
+    int y = 0;
+
+    for (size_t k = 0; k < 3 * 100; k++)
+    {
+        for (size_t i = 0; i < 256; i++)
+        {
+            for (size_t j = 0; j < 256; j++)
+            {
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                fb_ptr[(i + x + 1) + (j + y + 1) * framebuffer->width] = 0x000000;
+            }
+        }
+
+        for (size_t i = 0; i < 256; i++)
+        {
+            for (size_t j = 0; j < 256; j++)
+            {
+                currentColour += 0x000001;
+                //currentColour += 0x000110;
+
+                const char msga[] = "\rRender                       Rendering...";
+                //flanterm_write(ft_ctx, msga, sizeof(msga));
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                fb_ptr[(i + x) + (j + y) * framebuffer->width] = currentColour;
+            }
+
+            currentColour += 0x001000;
+        }
+
+        for (size_t i = 0; i < 60; i++)
+        {
+            ;
+            ;
+            ;
+            ;
+            ;
+            ;
+        }
+
+        currentColour += 0x010000;
+        currentColour *= 0x000020;
+
+        x += 1;
+        y += 1;
+
+        if(x == 100) {
+            x = 0;
+            y = 0;
+        }
+
+        //k--;
+    }
+
+    for (size_t k = 0; k < (3 * 100) - 3 * 100 + 1; k++)
+    {
+        for (size_t i = 0; i < 256; i++)
+        {
+            for (size_t j = 0; j < 256; j++)
+            {
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                //fb_ptr[i + j * framebuffer->width] = 0x000000;
+            }
+        }
+
+        for (size_t i = 0; i < 256; i++)
+        {
+            for (size_t j = 0; j < 256; j++)
+            {
+                currentColour += 0x000001;
+                //currentColour += 0x000110;
+
+                const char msga[] = "\rRender                       Rendering...";
+                flanterm_write(ft_ctx, msga, sizeof(msga));
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                fb_ptr[i + j * framebuffer->width] = currentColour;
+            }
+
+            //currentColour += 0x001000;
+        }
+
+        for (size_t i = 0; i < 60; i++)
+        {
+            ;
+            ;
+            ;
+            ;
+            ;
+            ;
+        }
+
+        currentColour += 0x010000;
+
+        //k--;
+    }
+
+   for (size_t k = 0; k < 3 * 100; k++)
+    {
+        for (size_t i = 0; i < framebuffer->width; i++)
+        {
+            for (size_t j = 0; j < framebuffer->height; j++)
+            {
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                //fb_ptr[i + j * framebuffer->width] = 0x000000;
+            }
+        }
+
+        for (size_t i = 0; i < framebuffer->width; i++)
+        {
+            for (size_t j = 0; j < framebuffer->height; j++)
+            {
+                currentColour += 0x000001;
+                //currentColour += 0x000110;
+
+                const char msga[] = "\rRender                       Rendering...";
+                flanterm_write(ft_ctx, msga, sizeof(msga));
+
+                volatile uint32_t* fb_ptr = framebuffer->address;
+                fb_ptr[i + j * framebuffer->width] = currentColour;
+            }
+
+            //currentColour += 0x001000;
+        }
+
+        for (size_t i = 0; i < 60; i++)
+        {
+            ;
+            ;
+            ;
+            ;
+            ;
+            ;
+        }
+
+        currentColour += 0x010000;
+
+        //k--;
+    }*/
+
     // We're done, just hang...
+    hcf();
+}
+
+void panic(const char msg[], const char error_code[]) {
+    if(ft_ctx_init == 0) hcf(); // Nothing you can do besides halting the CPU.
+
+    ft_ctx_public->set_cursor_pos(ft_ctx_public, 0, 0);
+    //const char write[] = "Kernel Panic!\nSystem halted: " + msg + "\n\nError code: " + error_code;
+    const char write[] = "Kernel Panic!\nSystem halted:";
+    flanterm_write(ft_ctx_public, write, sizeof(write));
+
     hcf();
 }
