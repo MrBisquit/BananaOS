@@ -9,7 +9,7 @@
 #include <flanterm/backends/fb.h>
 
 // Graphics
-//#include <graphics.h>
+#include <graphics.h>
 
 // Set the base revision to 2, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -152,6 +152,62 @@ void _start(void) {
     const char msg[] = "Welcome to BananaOS, initialising...\n";
 
     flanterm_write(ft_ctx, msg, sizeof(msg));
+
+    unsigned int colour = 0x000000;
+
+    for (size_t i = 0; i < 10000; i++)
+    {
+        //clear_screen(framebuffer, colour);
+
+        for (size_t y = 0; y < framebuffer->height; y++)
+        {
+            for (size_t x = 0; x < framebuffer->width; x++)
+            {
+                //draw_point(framebuffer, x, y, x + y + colour);
+
+                //colour += 0x000110;
+
+                if(y % 3 == 0) {
+                    //colour += 0x01;
+                } else if(y % 2 == 0) {
+                    //colour += 0x0001;
+                } else {
+                    //colour += 0x000001;
+                }
+            }
+        }
+
+        //colour += 0x000100;
+        //colour += 0x000010;
+        //colour += 0x000001;
+        //colour += 0x010000;
+
+        i -= 1;
+
+        for (size_t y = 0; y < 11; y++)
+        {
+            for (size_t x = 0; x < 15; x++)
+            {
+                //colour += 0x000001;
+
+                draw_filled_rectangle(framebuffer, 50 + (50 * x) + (10 * x), 50 + (50 * y) + (10 * y), 50, 50, colour);
+            }
+            
+        }
+        
+
+        colour += 0x000001;
+
+        //draw_filled_rectangle(framebuffer, 50, 50, 50, 50, colour);
+
+        //colour += 0x000101;
+
+        //draw_filled_rectangle(framebuffer, 50 + 50 + 10, 50, 50, 50, colour);
+
+        const char msg[] = "\rUpdating...";
+
+        flanterm_write(ft_ctx, msg, sizeof(msg));
+    }
 
     //panic("Idk", "SOMETHING_WENT_WRONG");
 

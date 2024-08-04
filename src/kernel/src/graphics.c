@@ -1,7 +1,7 @@
 #include <limine.h>
 #include <graphics.h>
 
-void clearScreen(limine_framebuffer *framebuffer, unsigned int color)
+void clear_screen(struct limine_framebuffer *framebuffer, unsigned int color)
 {
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
     /*for (uint64_t i = 0; i < framebuffer->width; i++) {
@@ -22,7 +22,7 @@ void clearScreen(limine_framebuffer *framebuffer, unsigned int color)
     }*/
 }
 
-void drawFilledRectangle(limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color)
+void draw_filled_rectangle(struct limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color)
 {
     // This is not a rectangle lmao
     /*
@@ -52,22 +52,22 @@ void drawFilledRectangle(limine_framebuffer *framebuffer, int x, int y, int widt
    }
 }
 
-void drawRectangle(limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color) {
+void draw_rectangle(struct limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color) {
     // Clearly my maths isn't right lol
 
-    DrawLine(x, y, x + width, y, color); // Top line
-    DrawLine(x, y, x, y + height, color); // Left down line
-    DrawLine(x, y + height, x + width, y + height, color); // Bottom line
-    DrawLine(x + width, y + height, x + width, y, color); // Right up line
+    draw_line(framebuffer, x, y, x + width, y, color); // Top line
+    draw_line(framebuffer, x, y, x, y + height, color); // Left down line
+    draw_line(framebuffer, x, y + height, x + width, y + height, color); // Bottom line
+    draw_line(framebuffer, x + width, y + height, x + width, y, color); // Right up line
 }
 
-void drawPoint(limine_framebuffer *framebuffer, int x, int y, unsigned int color)
+void draw_point(struct limine_framebuffer *framebuffer, int x, int y, unsigned int color)
 {
     volatile uint32_t* fb_ptr = framebuffer->address;
     fb_ptr[x + y * framebuffer->width] = color;
 }
 
-void drawLine(limine_framebuffer *framebuffer, int x1, int y1, int x2, int y2, unsigned int color) 
+void draw_line(struct limine_framebuffer *framebuffer, int x1, int y1, int x2, int y2, unsigned int color) 
 {
     int dx, dy, p, x, y;
 
@@ -81,12 +81,12 @@ void drawLine(limine_framebuffer *framebuffer, int x1, int y1, int x2, int y2, u
 
     for (int i = 0; i < dx; i++) {
         if (p < 0) {
-            DrawPoint(x, y, color);
+            draw_point(framebuffer, x, y, color);
             y = y + 1;
             p = p + 2 * dy;
         }
         else {
-            DrawPoint(x, y, color);
+            draw_point(framebuffer, x, y, color);
             x = x + 1;
             y = y + 1;
             p = p + 2 * dy - 2 * dx;
@@ -94,13 +94,13 @@ void drawLine(limine_framebuffer *framebuffer, int x1, int y1, int x2, int y2, u
     }
 }
 
-unsigned int fetchPixel(limine_framebuffer *framebuffer, int x, int y) {
+unsigned int fetch_pixel(struct limine_framebuffer *framebuffer, int x, int y) {
     volatile uint32_t* fb_ptr = framebuffer->address;
 
     return fb_ptr[x + y * framebuffer->width];
 }
 
-int outOfBounds(limine_framebuffer *framebuffer, int x, int y) {
+int out_of_bounds(struct limine_framebuffer *framebuffer, int x, int y) {
     // Sees if the provided coordinates are in the bounds
     // (So we don't write to a part of memory we're not suppost to)
 

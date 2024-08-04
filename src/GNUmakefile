@@ -1,7 +1,7 @@
 # Nuke built-in rules and variables.
 override MAKEFLAGS += -rR
 
-override IMAGE_NAME := template
+override IMAGE_NAME := BananaOS
 
 .PHONY: all
 all: $(IMAGE_NAME).iso
