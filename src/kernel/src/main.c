@@ -9,7 +9,7 @@
 #include <flanterm/backends/fb.h>
 
 // Graphics
-#include <graphics.h>
+//#include <graphics.h>
 
 // Set the base revision to 2, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -152,8 +152,6 @@ void _start(void) {
     const char msg[] = "Welcome to BananaOS, initialising...\n";
 
     flanterm_write(ft_ctx, msg, sizeof(msg));
-
-    drawFilledRectangle(ft)
 
     //panic("Idk", "SOMETHING_WENT_WRONG");
 

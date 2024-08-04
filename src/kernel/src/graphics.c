@@ -1,4 +1,4 @@
-#include "limine.h"
+#include <limine.h>
 #include <graphics.h>
 
 void clearScreen(limine_framebuffer *framebuffer, unsigned int color)
