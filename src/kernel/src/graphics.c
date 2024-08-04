@@ -1,7 +1,7 @@
 #include "limine.h"
 #include <graphics.h>
 
-void clearScreen(void *framebuffer, unsigned int color)
+void clearScreen(limine_framebuffer *framebuffer, unsigned int color)
 {
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
     /*for (uint64_t i = 0; i < framebuffer->width; i++) {
@@ -22,7 +22,7 @@ void clearScreen(void *framebuffer, unsigned int color)
     }*/
 }
 
-void drawFilledRectangle(void *framebuffer, int x, int y, int width, int height, unsigned int color)
+void drawFilledRectangle(limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color)
 {
     // This is not a rectangle lmao
     /*
@@ -52,7 +52,7 @@ void drawFilledRectangle(void *framebuffer, int x, int y, int width, int height,
    }
 }
 
-void drawRectangle(void *framebuffer, int x, int y, int width, int height, unsigned int color) {
+void drawRectangle(limine_framebuffer *framebuffer, int x, int y, int width, int height, unsigned int color) {
     // Clearly my maths isn't right lol
 
     DrawLine(x, y, x + width, y, color); // Top line
@@ -61,13 +61,13 @@ void drawRectangle(void *framebuffer, int x, int y, int width, int height, unsig
     DrawLine(x + width, y + height, x + width, y, color); // Right up line
 }
 
-void drawPoint(void *framebuffer, int x, int y, unsigned int color)
+void drawPoint(limine_framebuffer *framebuffer, int x, int y, unsigned int color)
 {
     volatile uint32_t* fb_ptr = framebuffer->address;
     fb_ptr[x + y * framebuffer->width] = color;
 }
 
-void drawLine(void *framebuffer, int x1, int y1, int x2, int y2, unsigned int color) 
+void drawLine(limine_framebuffer *framebuffer, int x1, int y1, int x2, int y2, unsigned int color) 
 {
     int dx, dy, p, x, y;
 
@@ -94,13 +94,13 @@ void drawLine(void *framebuffer, int x1, int y1, int x2, int y2, unsigned int co
     }
 }
 
-unsigned int fetchPixel(void *framebuffer, int x, int y) {
+unsigned int fetchPixel(limine_framebuffer *framebuffer, int x, int y) {
     volatile uint32_t* fb_ptr = framebuffer->address;
 
     return fb_ptr[x + y * framebuffer->width];
 }
 
-int outOfBounds(void *framebuffer, int x, int y) {
+int outOfBounds(limine_framebuffer *framebuffer, int x, int y) {
     // Sees if the provided coordinates are in the bounds
     // (So we don't write to a part of memory we're not suppost to)
 
